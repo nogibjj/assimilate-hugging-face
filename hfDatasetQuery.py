@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from hlib.loader import search
+from hlib.loader import search, inspect_data
 import click
 from random import choice
 
@@ -38,6 +38,21 @@ def query(pattern, limit, sort):
     for dataset in datasets:
         # print colored dataset name
         print(click.style(dataset, fg=next(color)))
+
+
+# build click command
+@cli.command("inspect")
+@click.argument("dataset")
+@click.option("--column", default="train", help="Column to inspect")
+@click.option("--rows", default=5, help="Number of rows to inspect")
+def inspect(dataset, column, rows):
+    """Inspect a Hugging Face dataset.
+
+    Example: ./hf-dataset-query.py inspect squad --column train --rows 5
+    """
+
+    data = inspect_data(dataset, column, rows)
+    print(data)
 
 
 if __name__ == "__main__":
